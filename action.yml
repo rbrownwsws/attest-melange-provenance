@@ -30,5 +30,6 @@ runs:
       with:
         subject-name: "${{ steps.prepare.outputs.subject-name }}"
         subject-digest: "${{ steps.prepare.outputs.subject-digest }}"
+        predicate-type: "https://slsa.dev/provenance/v1"
         predicate-path: "${{ steps.prepare.outputs.predicate-file }}"
         github-token: "${{ inputs.github-api-token }}"
