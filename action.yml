@@ -1,0 +1,34 @@
+name: "Attest melange provenance"
+description: "Create a GitHub attestation for a melange build provenance attestation"
+
+inputs:
+  attestation-file:
+    description: "Path to the melange build provenance attestation file output by the release-melange-package action"
+    required: true
+  github-api-token:
+    description: "The GitHub API token to use to create the Attestation"
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Prepare dist artifacts
+      id: prepare
+      shell: bash
+      env:
+        ATTESTATION_FILE: ${{ inputs.attestation-file }}
+      run: |
+        set -euo pipefail
+        
+        SCRIPT="${GITHUB_ACTION_PATH}/prepare.sh"
+        chmod +x "${SCRIPT}"
+        "${SCRIPT}"
+
+    - uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4.2.0
+      with:
+        subject-name: "${{ steps.prepare.outputs.subject-name }}"
+        subject-digest: "${{ steps.prepare.outputs.subject-digest }}"
+        predicate-path: "${{ steps.prepare.outputs.predicate-file }}"
+        github-token: "${{ inputs.github-api-token }}"
