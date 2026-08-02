@@ -53,6 +53,8 @@ runs:
     - name: Attest with cosign directly (with real predicate type)
       id: attest-cosign
       shell: bash
+      env:
+        STATEMENT_FILE: ${{ inputs.statement-file }}
       run: |
         set -euo pipefail
         
