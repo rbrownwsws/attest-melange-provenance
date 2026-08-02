@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ ! -f "${ATTESTATION_FILE:-}" ]]; then
-  echo "::error::attestation-file does not exist at ${ATTESTATION_FILE}"
+if [[ ! -f "${STATEMENT_FILE:-}" ]]; then
+  echo "::error::statement-file does not exist at ${STATEMENT_FILE}"
   exit 1
 fi
 
-IN_TOTO_JSON=$(cat "${ATTESTATION_FILE}")
+IN_TOTO_JSON=$(cat "${STATEMENT_FILE}")
 
 SUBJECT_COUNT=$(jq -r '.subject | if type == "array" then length else error("not an array") end' <<<"${IN_TOTO_JSON}")
 if (( SUBJECT_COUNT != 1 )); then
@@ -25,7 +25,7 @@ if [[ "${PREDICATE_TYPE}" != 'https://slsa.dev/provenance/v1' ]]; then
 fi
 
 PREDICATE=$(jq '.predicate' <<<"${IN_TOTO_JSON}")
-PREDICATE_FILE=$(mktemp --tmpdir="${RUNNER_TEMP}" --suffix='.slsa.json')
+PREDICATE_FILE=$(mktemp --tmpdir="${RUNNER_TEMP}" --suffix='.provenance.json')
 printf '%s' "${PREDICATE}" > "${PREDICATE_FILE}"
 
 echo "subject-name=${SUBJECT_NAME}" >> "${GITHUB_OUTPUT}"
