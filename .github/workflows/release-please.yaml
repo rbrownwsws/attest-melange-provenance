@@ -12,7 +12,7 @@ permissions: {}
 jobs:
   release-please:
     name: release-please
-    uses: rbrownwsws/actions-workflows/.github/workflows/release-please.yaml@99d2f29fa2082208aef7b0036ec099262cf0164e # v1.0.0
+    uses: rbrownwsws/actions-workflows/.github/workflows/release-please.yaml@c75a4e92d88396a5809f92760b886167030efd03 # v1.0.2
     with:
       app-client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
     secrets:
